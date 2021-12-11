@@ -16,11 +16,10 @@
  */
 package org.apache.logging.log4j.core.lookup;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
+
+// NOTE: JNDI funcionality has been patched out due to RCE bug.
 
 /**
  * Looks up keys from JNDI resources.
@@ -49,30 +48,6 @@ public class JndiLookup implements StrLookup {
      */
     @Override
     public String lookup(final LogEvent event, final String key) {
-        if (key == null) {
-            return null;
-        }
-
-        try {
-            InitialContext ctx = new InitialContext();
-            return (String) ctx.lookup(convertJndiName(key));
-        } catch (NamingException e) {
-            return null;
-        }
-    }
-
-    /**
-     * Convert the given JNDI name to the actual JNDI name to use.
-     * Default implementation applies the "java:comp/env/" prefix
-     * unless other scheme like "java:" is given.
-     * @param jndiName The name of the resource.
-     * @return The fully qualified name to look up.
-     */
-    private String convertJndiName(String jndiName) {
-        if (!jndiName.startsWith(CONTAINER_JNDI_RESOURCE_PATH_PREFIX) && jndiName.indexOf(':') == -1) {
-            jndiName = CONTAINER_JNDI_RESOURCE_PATH_PREFIX + jndiName;
-        }
-
-        return jndiName;
+        return null;
     }
 }
